@@ -178,6 +178,18 @@ namespace IngameScript
                 }
             }
 
+            public int CarriageIndex
+            {
+                get
+                {
+                    return (int)data.Get("States", "CarriageIndex").ToInt32();
+                }
+                set
+                {
+                    data.Set("States", "CarriageIndex", value);
+                }
+            }
+
             public float Alpha
             {
                 get
@@ -282,6 +294,7 @@ namespace IngameScript
                 data.Set("States", "FirstRun", "True"); // Bool
                 data.Set("States", "Text", "PLACEHOLDERTEXT");
                 data.Set("States", "User", "PLACEHOLDERUSER");
+                data.Set("States", "CarriageIndex", "0");
                 // UI Configuration
                 data.Set("UI", "Alpha", "1");// Float
                 data.Set("UI", "CanPlaySoundOnMouseOver", "False"); // Bool

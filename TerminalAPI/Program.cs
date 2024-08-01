@@ -86,7 +86,31 @@ namespace IngameScript
 
             // Terminal API Example
             Echo("Im not dead");
-            lcd.WriteText(cmd.Text);
+            string x = cmd.Text;
+            if (cmd.Text.Length == 0)
+            {
+                x = ">";
+            }
+            else if (x.Substring(0, 0) != ">")
+            {
+                x = ">" + x;
+            }
+
+            if (x.IndexOf("|") != cmd.CarriageIndex+1)
+            {
+                if (x.Contains("|"))
+                {
+                    x = x.Remove(x.IndexOf("|"), 1);
+                }
+                x = x.Insert(cmd.CarriageIndex+1, "|");
+            }
+            
+
+
+            if (lcd.GetText() != cmd.Text)
+            {
+                lcd.WriteText(x);
+            }
             cmd.Update();
 
         }
