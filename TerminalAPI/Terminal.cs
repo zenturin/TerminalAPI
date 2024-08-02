@@ -201,7 +201,7 @@ namespace IngameScript
                         {
                             temp = temp.Remove(index, 1);
                         }
-                        temp.Trim();
+                        temp = temp.Trim();
                         Keys.Add(temp);
                     }
                     return Keys;
@@ -503,7 +503,7 @@ namespace IngameScript
                             {
                                 temp = temp.Remove(index, 1);
                             }
-                            temp.Trim();
+                            temp = temp.Trim();
                             Keys.Add(temp);
                         }
                         return Keys;
