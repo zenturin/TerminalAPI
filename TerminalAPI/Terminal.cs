@@ -174,12 +174,35 @@ namespace IngameScript
             {
                 get
                 {
-                    List<MyIniKey> IniKeys = new List<MyIniKey>();
+
                     List<string> Keys = new List<string>();
-                    data.GetKeys("SpecialKeys", IniKeys);
-                    foreach (var key in IniKeys)
+                    string y = data.Get("Keys", "SpecialKeys").ToString();
+                    List<string> z = new List<string>();
+                    if (y.Contains(','))
                     {
-                        Keys.Add(key.Name);
+                        z = y.Split(',').ToList();
+                    }
+                    else
+                    {
+
+                        z.Add(y);
+                    }
+                    foreach (var item in z)
+                    {
+                        string temp = item;
+                        int index = 0;
+                        index = temp.IndexOf("(");
+                        if (index != -1)
+                        {
+                            temp = temp.Remove(index, 1);
+                        }
+                        index = temp.IndexOf(")");
+                        if (index != -1)
+                        {
+                            temp = temp.Remove(index, 1);
+                        }
+                        temp.Trim();
+                        Keys.Add(temp);
                     }
                     return Keys;
                 }
@@ -451,14 +474,44 @@ namespace IngameScript
             {
                 get
                 {
-                    List<MyIniKey> IniKeys = new List<MyIniKey>();
+
                     List<string> Keys = new List<string>();
-                    data.GetKeys("GeneralKeys", IniKeys);
-                    foreach (var key in IniKeys)
+                    string y = data.Get("Keys", "GeneralKeys").ToString();
+                    try
                     {
-                        Keys.Add(key.Name);
+                        List<string> z = new List<string>();
+                        if (y.Contains(','))
+                        {
+                            z = y.Split(',').ToList();
+                        }
+                        else
+                        {
+
+                            z.Add(y);
+                        }
+                        foreach (var item in z)
+                        {
+                            string temp = item;
+                            int index = 0;
+                            index = temp.IndexOf("(");
+                            if (index != -1)
+                            {
+                                temp = temp.Remove(index, 1);
+                            }
+                            index = temp.IndexOf(")");
+                            if (index != -1)
+                            {
+                                temp = temp.Remove(index, 1);
+                            }
+                            temp.Trim();
+                            Keys.Add(temp);
+                        }
+                        return Keys;
                     }
-                    return Keys;
+                    catch (Exception)
+                    {
+                        return new List<string>();
+                    }
                 }
             }
 
@@ -507,7 +560,8 @@ namespace IngameScript
                 data.Set("States", "User", "PLACEHOLDERUSER");
                 data.Set("States", "CarriageIndex", "0");
                 // Special Keys
-                data.AddSection("SpecialKeys");
+                data.Set("Keys", "SpecialKeys", "( )");
+                data.Set("Keys", "GeneralKeys", "( )");
                 // UI Configuration
                 data.Set("UI", "Alpha", "1");// Float
                 data.Set("UI", "CanPlaySoundOnMouseOver", "False"); // Bool
@@ -518,8 +572,6 @@ namespace IngameScript
                 data.Set("UI", "Size", "( 0.15 , 0.15 )"); // Vector2
                 data.Set("UI", "ColorMask", "( 1 , 1 , 1 , 1 )"); // Vector4
                 data.Set("UI", "BorderColor", "( 0 , 0 , 0 , 1 )"); // Vector4
-                                                                    // General Keys
-                data.AddSection("GeneralKeys");
 
                 // Debug
                 data.Set("Debug", "ErrorCount", "0"); // Int
@@ -531,13 +583,19 @@ namespace IngameScript
             /// </summary>
             /// <param name="xmlstring">The XML string to parse.</param>
             /// <returns>A string indicating the result of the parse operation.</returns>
-            protected string TryParse(String xmlstring)
+            public string TryParse(String xmlstring)
             {
+                if (xmlstring.ToLower() == "#terminal")
+                {
+                    return "Initialise";
+                }
                 Packet temp = new Packet();
+                MyIni copy = new MyIni();
+                copy = data;
                 if (temp.data.TryParse(xmlstring))
                 {
                     parser(temp);
-                    if (temp.data == data)
+                    if (copy == data)
                     {
                         return "UnChanged";
                     }
@@ -550,6 +608,7 @@ namespace IngameScript
                 {
                     return "Failed";
                 }
+
             }
 
             /// <summary>
@@ -576,6 +635,7 @@ namespace IngameScript
                         data.Set(key.Section, key.Name, value);
                     }
                 }
+
             }
         }
     }

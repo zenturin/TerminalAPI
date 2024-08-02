@@ -33,11 +33,12 @@ namespace IngameScript
         // to learn more about ingame scripts.
         Terminal cmd;
         IMyTextSurface lcd;
+        IMyShipController ControlSeat;
 
         public Program()
         {
             // Terminal API Startup
-            IMyShipController ControlSeat;
+            
             ControlSeat = GridTerminalSystem.GetBlockWithName("Cockpit") as IMyShipController;
             cmd = new Terminal(ControlSeat);
 
@@ -85,6 +86,7 @@ namespace IngameScript
             // can be removed if not needed.
 
             // Terminal API Example
+            
             Echo("Im not dead");
             string x = cmd.Text;
             if (cmd.Text.Length == 0)
@@ -111,8 +113,27 @@ namespace IngameScript
             {
                 lcd.WriteText(x);
             }
+            
+            string endme = cmd.Text;
+            Echo("--SPECIAL--");
+            foreach (var item in cmd.SpecialKeys)
+            {
+                endme += item + "\n";
+            }
+            Echo("--GENERAL--");
+            foreach (var item in cmd.GeneralKeys)
+            {
+                endme += item + "\n";
+            }
+            Echo(endme);
+
+
+
+
+
             cmd.Update();
 
         }
+
     }
 }
